@@ -1,6 +1,6 @@
 KOKKOS_PATH = ${HOME}/kokkos/kokkos
 SRC = $(wildcard *.cpp)
-KOKKOS_DEVICES=Cuda,OpenMP
+KOKKOS_DEVICES=Cuda
 KOKKOS_CUDA_OPTIONS=enable_lambda
 KOKKOS_ARCH = Power9,Volta70
 
@@ -8,14 +8,17 @@ default: build
 	echo "Start Build"
 
 ifneq (,$(findstring Cuda,$(KOKKOS_DEVICES)))
+#OMPI_CXX= ${KOKKOS_PATH}/bin/nvcc_wrapper
+NVCC_WRAPPER_DEFAULT_COMPILER = mpic++
 CXX = ${KOKKOS_PATH}/bin/nvcc_wrapper
+#CXX = mpic++
 EXE = test.cuda
 else
 CXX = g++
 EXE = test.host
 endif
 
-CXXFLAGS = -O3 -g
+CXXFLAGS = -O3 -g 
 LINK = ${CXX}
 LINKFLAGS =  
 
